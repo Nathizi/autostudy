@@ -1,0 +1,6 @@
+git init
+git add index.html README.md
+git commit -m "Site vitrine AutoStudy"
+git branch -M main
+git remote add origin https://github.com/Nathizi/autostudy.git
+git push -u origin main
