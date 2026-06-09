@@ -1,6 +1,342 @@
-git init
-git add index.html README.md
-git commit -m "Site vitrine AutoStudy"
-git branch -M main
-git remote add origin https://github.com/Nathizi/autostudy.git
-git push -u origin main
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoStudy — Vos documents deviennent vos révisions</title>
+<meta name="description" content="AutoStudy transforme PDF, images et notes manuscrites en résumés, fiches de révision, flashcards, quiz et un parcours d'apprentissage personnalisé.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0a1733;
+  --blue:#1b4dd6;
+  --blue-deep:#0f2e8c;
+  --sky:#dce6ff;
+  --sky-soft:#eef3ff;
+  --paper:#ffffff;
+  --line:#c9d6f5;
+  --mute:#566187;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  color:var(--ink);
+  background:var(--paper);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+.skip{position:absolute;left:-999px;top:0;background:var(--blue);color:#fff;padding:12px 18px;z-index:200;border-radius:0 0 8px 0}
+.skip:focus{left:0}
+:focus-visible{outline:3px solid var(--blue);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* header */
+header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:68px}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:1.25rem;letter-spacing:-.01em}
+.glyph{width:30px;height:30px;flex:none}
+.nav-links{display:flex;gap:30px;align-items:center;font-size:.94rem;font-weight:500}
+.nav-links a{text-decoration:none;color:var(--mute)}
+.nav-links a:hover{color:var(--ink)}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--blue);color:#fff;text-decoration:none;font-weight:600;font-size:.94rem;padding:11px 20px;border-radius:999px;border:none;cursor:pointer;transition:background .2s,transform .2s}
+.btn:hover{background:var(--blue-deep);transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--blue);border:1.5px solid var(--line)}
+.btn-ghost:hover{background:var(--sky-soft);border-color:var(--blue)}
+@media(max-width:760px){.nav-links a:not(.btn){display:none}}
+
+/* hero */
+.hero{padding:84px 0 60px;position:relative;overflow:hidden}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:20px}
+h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(2.4rem,6vw,4.2rem);line-height:1.04;letter-spacing:-.02em;max-width:14ch}
+h1 em{font-style:italic;color:var(--blue)}
+.lede{font-size:1.18rem;color:var(--mute);max-width:46ch;margin:26px 0 34px}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap}
+
+/* signature: the transform pipeline */
+.pipeline{margin-top:72px;border:1px solid var(--line);border-radius:var(--r);background:linear-gradient(180deg,var(--sky-soft),#fff);overflow:hidden}
+.pipe-head{display:flex;align-items:center;gap:8px;padding:14px 20px;border-bottom:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--mute)}
+.dot{width:10px;height:10px;border-radius:50%}
+.pipe-grid{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;align-items:center;gap:0;padding:38px 24px}
+@media(max-width:820px){.pipe-grid{grid-template-columns:1fr;gap:18px}.arrow{transform:rotate(90deg);justify-self:center}}
+.stage{text-align:center}
+.stage h3{font-family:'JetBrains Mono',monospace;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:14px;font-weight:500}
+.chip{display:block;background:#fff;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:.88rem;font-weight:500;margin:7px auto;max-width:200px;box-shadow:0 1px 0 rgba(15,46,140,.04)}
+.arrow{color:var(--blue);font-size:1.4rem;justify-self:center;padding:0 6px}
+.stage-core{background:var(--blue);border-radius:12px;padding:22px 16px;color:#fff}
+.stage-core h3{color:var(--sky)}
+.stage-core .chip{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.25);color:#fff;box-shadow:none}
+
+/* section */
+section{padding:88px 0}
+.sec-head{margin-bottom:48px;max-width:52ch}
+.sec-head .eyebrow{margin-bottom:14px}
+h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(1.9rem,4vw,2.8rem);letter-spacing:-.015em;line-height:1.1}
+.sub{color:var(--mute);font-size:1.08rem;margin-top:14px}
+
+/* inputs */
+.inputs{background:var(--sky-soft);border-radius:var(--r)}
+.in-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+@media(max-width:720px){.in-grid{grid-template-columns:1fr}}
+.in-card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:26px}
+.in-card svg{width:34px;height:34px;color:var(--blue);margin-bottom:16px}
+.in-card h3{font-size:1.1rem;margin-bottom:8px}
+.in-card p{color:var(--mute);font-size:.95rem}
+
+/* outputs grid */
+.out-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+@media(max-width:720px){.out-grid{grid-template-columns:1fr}}
+.out-card{border:1px solid var(--line);border-radius:var(--r);padding:30px;position:relative;transition:border-color .2s,transform .2s}
+.out-card:hover{border-color:var(--blue);transform:translateY(-3px)}
+.out-num{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--blue);font-weight:500}
+.out-card h3{font-family:'Fraunces',serif;font-weight:500;font-size:1.45rem;margin:10px 0}
+.out-card p{color:var(--mute);font-size:.98rem}
+
+/* how */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;counter-reset:s}
+@media(max-width:720px){.steps{grid-template-columns:1fr}}
+.step{counter-increment:s}
+.step::before{content:counter(s,decimal-leading-zero);font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--blue);display:block;margin-bottom:14px;border-top:2px solid var(--blue);padding-top:10px;width:36px}
+.step h3{font-size:1.15rem;margin-bottom:8px}
+.step p{color:var(--mute);font-size:.97rem}
+
+/* cta band */
+.band{background:var(--ink);color:#fff;border-radius:var(--r);padding:64px 48px;text-align:center}
+.band h2{color:#fff}
+.band p{color:#aebbe0;margin:16px auto 30px;max-width:44ch}
+.band .btn{background:#fff;color:var(--blue)}
+.band .btn:hover{background:var(--sky)}
+
+/* upload zone */
+.upload{max-width:620px;margin:0 auto}
+.dropzone{border:2px dashed var(--line);border-radius:var(--r);background:#fff;padding:48px 28px;text-align:center;transition:border-color .2s,background .2s;cursor:pointer}
+.dropzone:hover,.dropzone.drag{border-color:var(--blue);background:var(--sky-soft)}
+.dropzone svg{width:46px;height:46px;color:var(--blue);margin-bottom:16px}
+.dropzone h3{font-size:1.15rem;margin-bottom:6px}
+.dropzone p{color:var(--mute);font-size:.95rem}
+.dropzone .formats{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--mute);margin-top:14px;letter-spacing:.04em}
+.filename{margin-top:18px;font-weight:600;color:var(--blue);font-size:.98rem;min-height:1.2em}
+.notice{margin-top:18px;background:var(--sky-soft);border:1px solid var(--line);border-radius:10px;padding:14px 18px;font-size:.92rem;color:var(--ink);display:none}
+.notice.show{display:block}
+.notice strong{color:var(--blue)}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:40px 0;color:var(--mute);font-size:.9rem}
+.foot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Aller au contenu</a>
+<header>
+  <div class="wrap nav">
+    <a href="#" class="brand" aria-label="AutoStudy, accueil">
+      <svg class="glyph" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <rect x="4" y="3" width="16" height="22" rx="2" fill="#dce6ff" stroke="#1b4dd6" stroke-width="1.6"/>
+        <path d="M8 9h8M8 13h8M8 17h5" stroke="#1b4dd6" stroke-width="1.6" stroke-linecap="round"/>
+        <circle cx="23" cy="22" r="6.5" fill="#1b4dd6"/>
+        <path d="M20.5 22l1.8 1.8 3.2-3.6" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      AutoStudy
+    </a>
+    <nav class="nav-links" aria-label="Navigation principale">
+      <a href="#entrees">Entrées</a>
+      <a href="#resultats">Résultats</a>
+      <a href="#fonctionnement">Fonctionnement</a>
+      <a href="#commencer" class="btn">Commencer</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<section class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Apprendre, sans la mise au propre</p>
+    <h1>Vos documents deviennent vos <em>révisions</em>.</h1>
+    <p class="lede">Déposez un PDF, une photo de tableau ou vos notes manuscrites. AutoStudy en extrait le contenu, le structure et en fait des supports prêts à réviser.</p>
+    <div class="cta-row">
+      <a href="#commencer" class="btn">Déposer un document</a>
+      <a href="#fonctionnement" class="btn btn-ghost">Voir comment ça marche</a>
+    </div>
+
+    <!-- SIGNATURE: the transform pipeline -->
+    <div class="pipeline" role="img" aria-label="Schéma : les entrées multi-formats passent par un moteur qui extrait, structure et génère, puis ressortent en supports de révision.">
+      <div class="pipe-head">
+        <span class="dot" style="background:#ff6058"></span>
+        <span class="dot" style="background:#ffbd2e"></span>
+        <span class="dot" style="background:#28c840"></span>
+        <span style="margin-left:8px">autostudy · pipeline</span>
+      </div>
+      <div class="pipe-grid">
+        <div class="stage">
+          <h3>Vous déposez</h3>
+          <span class="chip">PDF de cours</span>
+          <span class="chip">Photo / image</span>
+          <span class="chip">Notes manuscrites</span>
+        </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="stage stage-core">
+          <h3>AutoStudy traite</h3>
+          <span class="chip">Extrait le contenu</span>
+          <span class="chip">Structure le savoir</span>
+          <span class="chip">Génère les supports</span>
+        </div>
+        <div class="arrow" aria-hidden="true">→</div>
+        <div class="stage">
+          <h3>Vous révisez</h3>
+          <span class="chip">Résumés &amp; fiches</span>
+          <span class="chip">Flashcards &amp; quiz</span>
+          <span class="chip">Parcours personnalisé</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="entrees" class="inputs">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Les entrées</p>
+      <h2>Apportez la matière dans n'importe quel format</h2>
+      <p class="sub">Pas besoin de retaper quoi que ce soit. AutoStudy lit aussi bien un manuel scanné qu'une page de carnet.</p>
+    </div>
+    <div class="in-grid">
+      <div class="in-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+        <h3>Fichiers PDF</h3>
+        <p>Polycopiés, articles, chapitres entiers. Le texte et la mise en forme sont reconnus.</p>
+      </div>
+      <div class="in-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <h3>Images</h3>
+        <p>Photos de diapos, de tableaux ou de pages de livre. L'extraction visuelle s'occupe du reste.</p>
+      </div>
+      <div class="in-card">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+        <h3>Notes manuscrites</h3>
+        <p>Vos propres écritures sont déchiffrées et transformées en texte structuré.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="resultats">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Les résultats</p>
+      <h2>Quatre supports, générés d'un seul dépôt</h2>
+      <p class="sub">Chaque document devient un jeu complet de matériel de révision, cohérent et réutilisable.</p>
+    </div>
+    <div class="out-grid">
+      <div class="out-card">
+        <span class="out-num">01</span>
+        <h3>Résumés de notes</h3>
+        <p>L'essentiel de chaque chapitre condensé, sans le superflu, avec les idées-clés mises en avant.</p>
+      </div>
+      <div class="out-card">
+        <span class="out-num">02</span>
+        <h3>Fiches de révision</h3>
+        <p>Des fiches synthétiques, organisées par notion, prêtes à relire la veille d'un examen.</p>
+      </div>
+      <div class="out-card">
+        <span class="out-num">03</span>
+        <h3>Flashcards &amp; quiz</h3>
+        <p>Des questions-réponses pour l'auto-évaluation et la mémorisation active.</p>
+      </div>
+      <div class="out-card">
+        <span class="out-num">04</span>
+        <h3>Parcours personnalisé</h3>
+        <p>Un ordre de révision adapté à vos points faibles, qui évolue au fil de vos résultats.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="fonctionnement" style="background:var(--sky-soft)">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">Le fonctionnement</p>
+      <h2>Trois étapes, du document au savoir</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <h3>Extraction du contenu</h3>
+        <p>AutoStudy lit le document, quel que soit son format, et en récupère le texte, les schémas et la structure.</p>
+      </div>
+      <div class="step">
+        <h3>Structuration du savoir</h3>
+        <p>Les notions sont triées, reliées entre elles et hiérarchisées en un plan clair.</p>
+      </div>
+      <div class="step">
+        <h3>Génération des supports</h3>
+        <p>Résumés, fiches, flashcards, quiz et parcours sont produits et prêts à l'emploi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="commencer">
+  <div class="wrap">
+    <div class="sec-head" style="text-align:center;margin:0 auto 40px">
+      <p class="eyebrow">Commencer</p>
+      <h2>Déposez votre premier document</h2>
+      <p class="sub">Glissez un fichier ou parcourez vos documents. AutoStudy s'occupe de la mise au propre.</p>
+    </div>
+
+    <div class="upload">
+      <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Déposer un document : glissez un fichier ici ou appuyez sur Entrée pour parcourir">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M12 3v13"/><path d="M7 8l5-5 5 5"/></svg>
+        <h3>Glissez votre document ici</h3>
+        <p>ou cliquez pour parcourir vos fichiers</p>
+        <p class="formats">PDF · IMAGE · NOTES MANUSCRITES</p>
+      </div>
+      <input type="file" id="fileInput" accept=".pdf,image/*" hidden aria-hidden="true">
+      <p class="filename" id="filename" role="status" aria-live="polite"></p>
+      <div class="notice" id="notice" role="status" aria-live="polite">
+        <strong>Document bien reçu.</strong> La génération automatique des résumés, fiches et quiz par IA arrive à la prochaine étape du projet, au déploiement de la version complète d'AutoStudy.
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <span>© 2026 AutoStudy</span>
+    <span>Conçu pour réviser, pas pour recopier.</span>
+  </div>
+</footer>
+<script>
+(function(){
+  var dz=document.getElementById('dropzone');
+  var input=document.getElementById('fileInput');
+  var fn=document.getElementById('filename');
+  var notice=document.getElementById('notice');
+
+  function show(file){
+    if(!file)return;
+    fn.textContent='Fichier sélectionné : '+file.name;
+    notice.classList.add('show');
+  }
+  function open(){input.click();}
+
+  dz.addEventListener('click',open);
+  dz.addEventListener('keydown',function(e){
+    if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}
+  });
+  input.addEventListener('change',function(){show(input.files[0]);});
+
+  dz.addEventListener('dragover',function(e){e.preventDefault();dz.classList.add('drag');});
+  dz.addEventListener('dragleave',function(){dz.classList.remove('drag');});
+  dz.addEventListener('drop',function(e){
+    e.preventDefault();dz.classList.remove('drag');
+    if(e.dataTransfer.files.length)show(e.dataTransfer.files[0]);
+  });
+})();
+</script>
+</body>
+</html>
